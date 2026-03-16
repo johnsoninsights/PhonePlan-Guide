@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Plan Comparison</title>
+    <!-- Use Google Fonts for clean sans-serif typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Verizon-inspired palette with reds, yellows, and warm tans */
+            --bg-color: #f7f6f2; /* Warm light tan background */
+            --card-bg: #ffffff;
+            --accent-color: #cd040b; /* Verizon Red */
+            --accent-hover: #a10308;
+            --accent-light: #fbe6e7;
+            --badge-color: #ffc72c; /* Vibrant yellow */
+            --badge-text: #1a1a1a;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --border-color: #e5e3dc;
+            
+            --font-family: 'Inter', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5rem 2rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4.5rem;
+            max-width: 800px;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* 3D Flip Card Container */
+        .plan-card-container {
+            perspective: 1200px;
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Staggered card animations */
+        .plan-card-container:nth-child(1) { animation-delay: 0.1s; }
+        .plan-card-container:nth-child(2) { animation-delay: 0.3s; }
+        .plan-card-container:nth-child(3) { animation-delay: 0.5s; }
+
+        .plan-card-container:hover {
+            transform: translateY(-12px);
+        }
+
+        /* The element that actually flips */
+        .plan-card-inner {
+            display: grid; /* Aligns front and back properly */
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .plan-card-container.flipped .plan-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and Back styling */
+        .card-face {
+            grid-area: 1 / 1;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        .plan-card-container:hover .card-face {
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1);
+            border-color: rgba(205, 4, 11, 0.3);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Highlighting the middle plan */
+        .plan-card-container.popular {
+            transform: scale(1.05); /* initial scale before animation logic overwrites it */
+            z-index: 10;
+        }
+        
+        .plan-card-container.popular .card-face {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 20px 40px rgba(205, 4, 11, 0.12);
+        }
+        
+        @keyframes fadeInUpPopular {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1.05);
+            }
+        }
+        .plan-card-container.popular {
+            animation: fadeInUpPopular 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.3s;
+        }
+
+        .plan-card-container.popular:hover {
+            transform: scale(1.05) translateY(-12px);
+        }
+        .plan-card-container.popular:hover .card-face {
+            box-shadow: 0 30px 60px rgba(205, 4, 11, 0.18);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--badge-color);
+            color: var(--badge-text);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(255, 199, 44, 0.4);
+            opacity: 0;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.9s; /* AFTER the card comes in */
+            z-index: 20;
+        }
+
+        /* Back Card Specialized Layout */
+        .card-back h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .card-back .section-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-back p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-back ul {
+            list-style: disc;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-back ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .fine-print {
+            font-size: 0.75rem !important;
+            color: #888 !important;
+            margin-top: auto;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .plan-price {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-end;
+            line-height: 1;
+        }
+
+        .plan-price span {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.7rem;
+            margin-left: 0.25rem;
+            letter-spacing: normal;
+        }
+
+        .best-for {
+            font-size: 0.95rem;
+            color: var(--accent-hover);
+            font-weight: 600;
+            padding: 0.85rem 1.25rem;
+            background-color: var(--accent-light);
+            border-radius: 12px;
+            margin: 1.5rem 0 1.5rem 0;
+            line-height: 1.4;
+            transition: var(--transition);
+        }
+        
+        .plan-card-container:hover .best-for {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            transition: transform 0.2s ease;
+        }
+
+        .features-list li:hover {
+            transform: translateX(8px);
+            color: var(--accent-color);
+        }
+
+        /* Checkmark icon */
+        .features-list li svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 14px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            color: var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+
+        .features-list li:hover svg {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* Flip Action Button */
+        .flip-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            align-self: flex-start;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+        }
+
+        /* Bold pulsing animation for the front toggle to scream "click me" */
+        @keyframes pulseAttention {
+            0% { box-shadow: 0 0 0 0 rgba(205, 4, 11, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 0 10px rgba(205, 4, 11, 0); transform: scale(1.03); }
+            100% { box-shadow: 0 0 0 0 rgba(205, 4, 11, 0); transform: scale(1); }
+        }
+
+        .flip-toggle.front-toggle {
+            color: var(--accent-color);
+            background-color: var(--accent-light);
+            border: 2px solid transparent;
+            animation: pulseAttention 2s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .flip-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .flip-toggle.front-toggle:hover {
+            background-color: var(--accent-color);
+            color: white;
+            animation: none; /* Stop pulse to give solid active state on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(205, 4, 11, 0.25);
+        }
+        
+        .flip-toggle.front-toggle:hover svg {
+            transform: translateX(6px);
+        }
+
+        /* Keep the back toggle looking like a standard text link to avoid distraction */
+        .flip-toggle.back-toggle {
+            padding: 0.5rem 0;
+            background: none;
+            color: var(--text-secondary);
+        }
+        
+        .flip-toggle.back-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        .flip-toggle.back-toggle:hover svg {
+            transform: translateX(-6px);
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 1.25rem;
+            border-radius: 14px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            margin-top: auto;
+        }
+
+        .cta-outline {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .cta-outline::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--accent-color);
+            z-index: -1;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cta-outline:hover, .cta-outline:focus-visible {
+            border-color: var(--accent-color);
+            color: white;
+            outline: none;
+        }
+        
+        .cta-outline:hover::before {
+            transform: scaleY(1);
+        }
+
+        .cta-solid {
+            background-color: var(--accent-color);
+            color: white;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 4px 12px rgba(205, 4, 11, 0.3);
+        }
+
+        .cta-solid::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-20deg);
+            z-index: 1;
+        }
+
+        .plan-card-container.popular:hover .cta-solid::after {
+            animation: shine 1.5s ease-in-out;
+        }
+
+        .cta-solid:hover, .cta-solid:focus-visible {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(205, 4, 11, 0.4);
+            outline: none;
+        }
+
+        /* Accessibility: Clear focus styles */
+        *:focus-visible {
+            outline: 3px solid var(--badge-color);
+            outline-offset: 3px;
+        }
+
+        /* Essential Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            70% { transform: translateX(-50%) scale(1.1); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .pricing-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                gap: 3rem;
+            }
+            .plan-card-container.popular {
+                transform: scale(1);
+                animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .plan-card-container.popular:hover {
+                transform: translateY(-8px);
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Quiz CTA */
+        .quiz-cta-container {
+            margin-top: 4rem;
+            text-align: center;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.7s;
+            opacity: 0;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-cta-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-cta-button {
+            display: inline-block;
+            width: auto;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .quiz-modal {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .quiz-modal {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+            background-color: var(--accent-light);
+        }
+
+        .modal-close svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
+        }
+
+        .quiz-step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .quiz-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-progress {
+            font-size: 0.875rem;
+            color: var(--accent-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .quiz-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(205, 4, 11, 0.1);
+        }
+
+        .quiz-option-desc {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
+        
+        .quiz-option-content {
+            flex-grow: 1;
+        }
+        
+        .quiz-nav {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .quiz-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+        
+        .btn-prev {
+            background-color: transparent;
+            color: var(--text-secondary);
+        }
+        
+        .btn-prev:hover {
+            color: var(--text-primary);
+            background-color: #f0f0f0;
+        }
+
+        .quiz-result-card {
+            background-color: var(--accent-light);
+            border: 2px solid var(--accent-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .quiz-result-name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Find the Right Phone Plan</h1>
+        <p class="subtitle">Simple, transparent options designed to fit your unique lifestyle.</p>
+    </header>
+
+    <main class="pricing-container">
+        <!-- Essential Plan -->
+        <article class="plan-card-container" id="card-essential">
+            <div class="plan-card-inner">
+                <!-- Front -->
+                <div class="card-face card-front">
+                    <h2 class="plan-name">Essential</h2>
+                    <div class="plan-price">$30<span>/mo</span></div>
+                    <div class="best-for">Best for light browsing and Wi-Fi users.</div>
+                    
+                    <ul class="features-list" aria-label="Essential Plan Features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>5GB High-Speed Data</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>Unlimited Talk & Text</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>Standard Definition Video</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="flip-toggle front-toggle" onclick="flipCard('card-essential')" aria-label="View more details about Essential Plan">
+                        See plan details
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                    
+                    <a href="#" class="cta-button cta-outline" aria-label="Choose the Essential Plan">Choose Essential</a>
+                </div>
+                
+                <!-- Back -->
+                <div class="card-face card-back">
+                    <div class="section-label">Deep Dive</div>
+                    <h3>Essential Plan</h3>
+                    <p>Designed to save you money while keeping you seamlessly connected.</p>
+                    
+                    <ul>
+                        <li>No annual contracts or hidden fees</li>
+                        <li>Speeds reduce to 2G after 5GB cap</li>
+                        <li>Access to low-band 5G network</li>
+                        <li>Wi-Fi Calling capability</li>
+                    </ul>
+                    
+                    <p class="fine-print">*Taxes and fees are not included. Autopay required for promotional pricing.</p>
+
+                    <button class="flip-toggle back-toggle" onclick="flipCard('card-essential')" aria-label="Go back to front of card">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back to overview
+                    </button>
+
+                    <a href="#" class="cta-button cta-outline" aria-label="Choose the Essential Plan">Choose Essential</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Plus Plan -->
+        <article class="plan-card-container popular" id="card-plus">
+            <div class="plan-card-inner">
+                <!-- Front -->
+                <div class="card-face card-front">
+                    <div class="popular-badge">Most Popular</div>
+                    <h2 class="plan-name">Plus</h2>
+                    <div class="plan-price">$50<span>/mo</span></div>
+                    <div class="best-for">Best for everyday streaming and social media.</div>
+                    
+                    <ul class="features-list" aria-label="Plus Plan Features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>50GB High-Speed Data</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>5GB Mobile Hotspot</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>High Def Video (720p)</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="flip-toggle front-toggle" onclick="flipCard('card-plus')" aria-label="View more details about Plus Plan">
+                        See plan details
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+
+                    <a href="#" class="cta-button cta-solid" aria-label="Choose the Plus Plan">Choose Plus</a>
+                </div>
+
+                <!-- Back -->
+                <div class="card-face card-back">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="section-label">Deep Dive</div>
+                    <h3>Plus Plan</h3>
+                    <p>The perfect balance of performance and value for everyday life.</p>
+                    
+                    <ul>
+                        <li>Includes Apple Music for 6 months</li>
+                        <li>Spam-call blocking included automatically</li>
+                        <li>Ultra Wideband 5G access in select cities</li>
+                        <li>Mexico & Canada travel pass (15 days/yr)</li>
+                    </ul>
+                    
+                    <p class="fine-print">*Taxes and fees are not included. Autopay required for promotional pricing.</p>
+
+                    <button class="flip-toggle back-toggle" onclick="flipCard('card-plus')" aria-label="Go back to front of card">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back to overview
+                    </button>
+
+                    <a href="#" class="cta-button cta-solid" aria-label="Choose the Plus Plan">Choose Plus</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Premium Plan -->
+        <article class="plan-card-container" id="card-premium">
+            <div class="plan-card-inner">
+                <!-- Front -->
+                <div class="card-face card-front">
+                    <h2 class="plan-name">Premium</h2>
+                    <div class="plan-price">$70<span>/mo</span></div>
+                    <div class="best-for">Best for power users and frequent travelers.</div>
+                    
+                    <ul class="features-list" aria-label="Premium Plan Features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>Unlimited High-Speed Data</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>25GB Mobile Hotspot</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span>4K Ultra HD Video</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="flip-toggle front-toggle" onclick="flipCard('card-premium')" aria-label="View more details about Premium Plan">
+                        See plan details
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+
+                    <a href="#" class="cta-button cta-outline" aria-label="Choose the Premium Plan">Choose Premium</a>
+                </div>
+
+                <!-- Back -->
+                <div class="card-face card-back">
+                    <div class="section-label">Deep Dive</div>
+                    <h3>Premium Plan</h3>
+                    <p>Built for those who demand the complete uncompromising package.</p>
+                    
+                    <ul>
+                        <li>Disney Bundle included permanently</li>
+                        <li>1 TravelPass day included every month</li>
+                        <li>Prioritized network speeds in heavy traffic</li>
+                        <li>Connected smartwatch data plan included</li>
+                    </ul>
+                    
+                    <p class="fine-print">*Taxes and fees are not included. Autopay required for promotional pricing.</p>
+
+                    <button class="flip-toggle back-toggle" onclick="flipCard('card-premium')" aria-label="Go back to front of card">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back to overview
+                    </button>
+
+                    <a href="#" class="cta-button cta-outline" aria-label="Choose the Premium Plan">Choose Premium</a>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- Quiz CTA -->
+    <div class="quiz-cta-container">
+        <p class="quiz-cta-text">Still can't decide?</p>
+        <button class="cta-button cta-solid quiz-cta-button" onclick="openQuiz()" aria-label="Start plan recommendation quiz">Take our 1-minute quiz</button>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal-overlay" id="quizOverlay">
+        <div class="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+            <button class="modal-close" onclick="closeQuiz()" aria-label="Close modal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button> <!-- Added missing closing bracket here in visualization -->
+
+            <!-- Step 1 -->
+            <div class="quiz-step active" id="step1">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 1 of 3</div>
+                </div>
+                <h3 class="quiz-question" id="quizTitle">How do you primarily use data on your phone?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectAnswer(1, 'light')">
+                        <div class="quiz-option-content">
+                            <div>Light text & email</div>
+                            <span class="quiz-option-desc">Mostly connected to Wi-Fi.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(1, 'moderate')">
+                        <div class="quiz-option-content">
+                            <div>Social media & maps</div>
+                            <span class="quiz-option-desc">Regular browsing away from home.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(1, 'heavy')">
+                        <div class="quiz-option-content">
+                            <div>Heavy streaming & hotspot</div>
+                            <span class="quiz-option-desc">Constant use, gaming, downloading.</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="quiz-step" id="step2">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 2 of 3</div>
+                </div>
+                <h3 class="quiz-question">Do you frequently travel internationally?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectAnswer(2, 'no')">
+                        <div class="quiz-option-content">
+                            <div>Rarely or never</div>
+                            <span class="quiz-option-desc">Mostly stay within the US.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(2, 'moderate')">
+                        <div class="quiz-option-content">
+                            <div>Sometimes</div>
+                            <span class="quiz-option-desc">A trip to Mexico or Canada.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(2, 'yes')">
+                        <div class="quiz-option-content">
+                            <div>Frequently</div>
+                            <span class="quiz-option-desc">Global traveler.</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn btn-prev" onclick="prevStep(1)">Back</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="quiz-step" id="step3">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 3 of 3</div>
+                </div>
+                <h3 class="quiz-question">What matters most when watching video?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectAnswer(3, 'standard')">
+                        <div class="quiz-option-content">
+                            <div>Doesn't matter</div>
+                            <span class="quiz-option-desc">Standard definition is fine.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(3, 'hd')">
+                        <div class="quiz-option-content">
+                            <div>Good Quality</div>
+                            <span class="quiz-option-desc">720p HD streaming.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectAnswer(3, '4k')">
+                        <div class="quiz-option-content">
+                            <div>The Best Quality</div>
+                            <span class="quiz-option-desc">4K Ultra HD all the way.</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn btn-prev" onclick="prevStep(2)">Back</button>
+                </div>
+            </div>
+
+            <!-- Result Step -->
+            <div class="quiz-step" id="stepResult">
+                <div class="quiz-header">
+                    <div class="quiz-title">Your Perfect Match</div>
+                </div>
+                <div class="quiz-result-card">
+                    <p style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem;">We recommend the</p>
+                    <div class="quiz-result-name" id="recommendedPlanName">Plus Plan</div>
+                    <p style="color: var(--text-secondary);" id="recommendedPlanReason">This plan perfectly balances your data needs with great features.</p>
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button cta-solid" onclick="closeQuizAndFocus()" style="width: auto; padding: 1rem 3rem;">View Plan Details</button>
+                    <br>
+                    <button class="quiz-btn btn-prev" style="margin-top: 1rem;" onclick="resetQuiz()">Take quiz again</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Toggle the flipped class on the specific card container
+        function flipCard(cardId) {
+            const card = document.getElementById(cardId);
+            if(card) {
+                card.classList.toggle('flipped');
+            }
+        }
+
+        const answers = { 1: null, 2: null, 3: null };
+
+        function openQuiz() {
+            document.getElementById('quizOverlay').classList.add('active');
+            resetQuiz();
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizOverlay').classList.remove('active');
+        }
+
+        function closeQuizAndFocus() {
+            closeQuiz();
+            const planText = document.getElementById('recommendedPlanName').innerText;
+            const planId = 'card-' + planText.split(' ')[0].toLowerCase();
+            const card = document.getElementById(planId);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.style.transform = 'scale(1.05)';
+                card.style.transition = 'transform 0.3s ease';
+                setTimeout(() => { 
+                    // Let the CSS hover classes take over if mouse is still on it
+                    card.style.transform = ''; 
+                }, 600);
+            }
+        }
+
+        function selectAnswer(stepIndex, answer) {
+            answers[stepIndex] = answer;
+            if (stepIndex < 3) {
+                nextStep(stepIndex + 1);
+            } else {
+                calculateResult();
+            }
+        }
+
+        function nextStep(stepIndex) {
+            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepIndex).classList.add('active');
+        }
+
+        function prevStep(stepIndex) {
+            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step' + stepIndex).classList.add('active');
+        }
+
+        function resetQuiz() {
+            answers[1] = null;
+            answers[2] = null;
+            answers[3] = null;
+            nextStep(1);
+        }
+
+        function calculateResult() {
+            let score = 0;
+            
+            // Usage
+            if (answers[1] === 'moderate') score += 1;
+            else if (answers[1] === 'heavy') score += 2;
+            
+            // Travel
+            if (answers[2] === 'moderate') score += 1;
+            else if (answers[2] === 'yes') score += 2.5; 
+            
+            // Video
+            if (answers[3] === 'hd') score += 1;
+            else if (answers[3] === '4k') score += 2;
+
+            let plan = "Essential";
+            let reason = "This plan covers your basic needs while saving you money.";
+            
+            if (score >= 4) {
+                plan = "Premium";
+                reason = "Built for your high demands, including heavy data use and seamless global travel.";
+            } else if (score >= 1.5) {
+                plan = "Plus";
+                reason = "A perfect balance of fast data and premium streaming quality for everyday life.";
+            }
+
+            document.getElementById('recommendedPlanName').innerText = plan + " Plan";
+            document.getElementById('recommendedPlanReason').innerText = reason;
+            
+            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('stepResult').classList.add('active');
+        }
+    </script>
+</body>
+</html>
