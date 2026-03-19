@@ -716,16 +716,450 @@
             color: var(--accent-color);
             margin-bottom: 0.5rem;
         }
+
+        /* --- New Internet & Toggle Styles --- */
+
+        /* Service Toggle (Mobile vs Internet) */
+        .service-toggle {
+            display: inline-flex;
+            position: relative;
+            background-color: #e5e3dc;
+            border-radius: 30px;
+            padding: 0.35rem;
+            margin-top: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .service-toggle input[type="radio"] {
+            display: none;
+        }
+
+        .service-toggle label {
+            position: relative;
+            z-index: 2;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            border-radius: 25px;
+        }
+
+        .service-toggle input[type="radio"]:checked + label {
+            color: #1a1a1a;
+        }
+
+        .toggle-pill {
+            position: absolute;
+            top: 0.35rem;
+            bottom: 0.35rem;
+            left: 0.35rem;
+            width: calc(50% - 0.35rem);
+            background-color: #fff;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1;
+        }
+
+        #toggle-internet:checked ~ .toggle-pill {
+            transform: translateX(100%);
+        }
+
+        /* View Sections Fade/Slide */
+        .view-section {
+            width: 100%;
+            animation: fadeInSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Internet Specific Styles */
+        #internet-plans .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .internet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e3dc;
+            padding-bottom: 1rem;
+            margin-inline: auto;
+        }
+
+        .internet-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .internet-header h2 svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .autopay-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .switch input:checked + .slider {
+            background-color: #008751; /* Dark green from image */
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .autopay-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            fill: #888;
+            cursor: help;
+        }
+
+        /* Internet Cards */
+        .internet-card {
+            background-color: #f3ece0; /* Warm tan matching image body */
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .internet-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+            border-color: rgba(230, 0, 0, 0.2);
+        }
+
+        .internet-card-top {
+            background-color: #e60000; /* Red banner */
+            color: white;
+            padding: 1.25rem;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            line-height: 1.3;
+        }
+
+        .internet-card-top svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+            opacity: 0.9;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+        }
+
+        .internet-card-body {
+            padding: 2rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .speed-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: #e60000;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .speed-title span {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .internet-price-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-top: -3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .internet-price {
+            font-size: 1.75rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .internet-price span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .internet-subprice {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .price-lock-badge {
+            background-color: #ffdc00;
+            color: #000;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            align-self: flex-start;
+        }
+
+        .price-lock-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .internet-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .internet-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .internet-features li svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            stroke: #e60000;
+            fill: none;
+            stroke-width: 2;
+            margin-top: 2px;
+        }
+
+        .review-details {
+            color: #1a1a1a;
+            text-decoration: underline;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        .review-details:hover {
+            color: #e60000;
+        }
+
+        .special-gift-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            margin-top: auto;
+            border: 1px solid #e5e3dc;
+            transition: all 0.3s ease;
+        }
+
+        .special-gift-container.expanded {
+            border-color: #e60000;
+            box-shadow: 0 4px 12px rgba(230,0,0,0.1);
+        }
+
+        .special-gift-badge {
+            background-color: #e60000;
+            color: white;
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .special-gift-text {
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .special-gift-text svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            stroke: #1a1a1a;
+            fill: none;
+            stroke-width: 2;
+            margin-bottom: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .special-gift-container.expanded .special-gift-text svg {
+            transform: rotate(180deg);
+        }
+
+        .special-gift-content {
+            display: none;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid #e5e3dc;
+            padding-top: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .special-gift-container.expanded .special-gift-content {
+            display: block;
+        }
+
+        .btn-black {
+            background-color: #000;
+            color: white;
+            border: 2px solid #000;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 24px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-black:hover {
+            background-color: #e60000;
+            border-color: #e60000;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            #internet-plans .pricing-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                gap: 2rem;
+                margin: 0 auto;
+            }
+            .internet-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 0 1rem 1rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Find the Right Phone Plan</h1>
-        <p class="subtitle">Simple, transparent options designed to fit your unique lifestyle.</p>
+        <h1 id="main-title">Find the Right Phone Plan</h1>
+        <p class="subtitle" id="main-subtitle">Simple, transparent options designed to fit your unique lifestyle.</p>
+        
+        <div class="service-toggle">
+            <input type="radio" id="toggle-mobile" name="service" value="mobile" checked onchange="toggleService('mobile')">
+            <label for="toggle-mobile">Mobile</label>
+            <input type="radio" id="toggle-internet" name="service" value="internet" onchange="toggleService('internet')">
+            <label for="toggle-internet">Internet</label>
+            <div class="toggle-pill"></div>
+        </div>
     </header>
 
-    <main class="pricing-container">
+    <main class="main-wrapper">
+        <div id="mobile-plans" class="pricing-container view-section active">
         <!-- Essential Plan -->
         <article class="plan-card-container" id="card-essential">
             <div class="plan-card-inner">
@@ -898,6 +1332,184 @@
                 </div>
             </div>
         </article>
+        </div> <!-- End of mobile-plans -->
+
+        <!-- Internet Plans Wrapper -->
+        <div id="internet-plans" class="view-section" style="display: none;">
+            <div class="internet-header">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                      <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                    </svg>
+                    Add internet
+                </h2>
+                <div class="autopay-toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" id="autopay-toggle" checked onchange="toggleAutoPay()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="autopay-label">Show pricing with Auto Pay & paper-free billing discount <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg></span>
+                </div>
+            </div>
+
+            <div class="pricing-container">
+                <!-- 300 Mbps Plan -->
+                <article class="internet-card">
+                    <div class="internet-card-top">
+                        <span>Special offer: $99 professional setup charge waived</span>
+                        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                    </div>
+                    <div class="internet-card-body">
+                        <div class="speed-title">300 <span>Mbps</span></div>
+                        <div class="internet-price-container">
+                            <div class="internet-price base-price" data-autopay="$49.99" data-noautopay="$59.99">$49.99<span>/mo</span></div>
+                            <div class="internet-subprice">As low as <span class="as-low-price" data-autopay="$34.99" data-noautopay="$44.99">$34.99</span>/mo <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg></div>
+                        </div>
+                        
+                        <div class="price-lock-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            3-year price lock guarantee
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="info-icon" style="fill: #000; width: 14px; height: 14px; stroke: none;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                        </div>
+
+                        <ul class="internet-features">
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4" stroke-width="2.5" stroke-linecap="round"/></svg>
+                                <span>Download and upload speeds of up to 300 Mbps.</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                <span>Router Included ($18/mo savings)</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                                <span>Supports up to 15 devices</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="#" class="review-details">Review details</a>
+
+                        <div class="special-gift-container" onclick="this.classList.toggle('expanded')" style="cursor: pointer;">
+                            <div class="special-gift-badge">A special gift, on us</div>
+                            <div class="special-gift-text">
+                                Get a Samsung 43 inch Q7F OLED TV and Apple One for 6 months¹...
+                                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                            <div class="special-gift-content">
+                                ...or a Samsung Galaxy Tab S10 FE 5G² or $15 Credit for 36 months³, and more. Limited time offer subject to availability.
+                            </div>
+                        </div>
+
+                        <button class="btn-black">Select</button>
+                    </div>
+                </article>
+
+                <!-- 500 Mbps Plan -->
+                <article class="internet-card">
+                    <div class="internet-card-top">
+                        <span>Special offer: $99 professional setup charge waived</span>
+                        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                    </div>
+                    <div class="internet-card-body">
+                        <div class="speed-title">500 <span>Mbps</span></div>
+                        <div class="internet-price-container">
+                            <div class="internet-price base-price" data-autopay="$74.99" data-noautopay="$84.99">$74.99<span>/mo</span></div>
+                            <div class="internet-subprice">As low as <span class="as-low-price" data-autopay="$59.99" data-noautopay="$69.99">$59.99</span>/mo <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg></div>
+                        </div>
+                        
+                        <div class="price-lock-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            4-year price lock guarantee
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="info-icon" style="fill: #000; width: 14px; height: 14px; stroke: none;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                        </div>
+
+                        <ul class="internet-features">
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4" stroke-width="2.5" stroke-linecap="round"/></svg>
+                                <span>Download and upload speeds of up to 500 Mbps.</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                <span>Router Included ($18/mo savings)</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                                <span>Supports up to 30 devices</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="#" class="review-details">Review details</a>
+
+                        <div class="special-gift-container" onclick="this.classList.toggle('expanded')" style="cursor: pointer;">
+                            <div class="special-gift-badge">A special gift, on us</div>
+                            <div class="special-gift-text">
+                                Get a Samsung 43 inch Q7F OLED TV and Apple One for 6 months¹...
+                                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                            <div class="special-gift-content">
+                                ...or a Samsung Galaxy Tab S10 FE 5G² or $15 Credit for 36 months³, and more. Limited time offer subject to availability.
+                            </div>
+                        </div>
+
+                        <button class="btn-black">Select</button>
+                    </div>
+                </article>
+
+                <!-- 1 Gig Plan -->
+                <article class="internet-card">
+                    <div class="internet-card-top">
+                        <span>Special offer: $99 professional setup charge waived</span>
+                        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                    </div>
+                    <div class="internet-card-body">
+                        <div class="speed-title">1 <span>Gig</span></div>
+                        <div class="internet-price-container">
+                            <div class="internet-price base-price" data-autopay="$89.99" data-noautopay="$99.99">$89.99<span>/mo</span></div>
+                            <div class="internet-subprice">As low as <span class="as-low-price" data-autopay="$74.99" data-noautopay="$84.99">$74.99</span>/mo <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg></div>
+                        </div>
+                        
+                        <div class="price-lock-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            5-year price lock guarantee
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="info-icon" style="fill: #000; width: 14px; height: 14px; stroke: none;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1-11h2v6h-2v-6zm1-4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+                        </div>
+
+                        <ul class="internet-features">
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20V10M18 20V4" stroke-width="2.5" stroke-linecap="round"/></svg>
+                                <span>Download and upload speeds of up to 940 Mbps.</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                <span>Router and Whole-Home Wi-Fi Included ($28/mo savings)</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                                <span>Supports up to 50 devices</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="#" class="review-details">Review details</a>
+
+                        <div class="special-gift-container" onclick="this.classList.toggle('expanded')" style="cursor: pointer;">
+                            <div class="special-gift-badge">A special gift, on us</div>
+                            <div class="special-gift-text">
+                                Get a Samsung 43 inch Q7F OLED TV and Apple One for 6 months¹...
+                                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                            </div>
+                            <div class="special-gift-content">
+                                ...or a Samsung Galaxy Tab S10 FE 5G² or $15 Credit for 36 months³, and more. Limited time offer subject to availability.
+                            </div>
+                        </div>
+
+                        <button class="btn-black">Select</button>
+                    </div>
+                </article>
+            </div>
+        </div>
     </main>
 
     <!-- Quiz CTA -->
@@ -1019,11 +1631,163 @@
                     <button class="quiz-btn btn-prev" style="margin-top: 1rem;" onclick="resetQuiz()">Take quiz again</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Internet Quiz Modal -->
+    <div class="modal-overlay" id="internetQuizOverlay">
+        <div class="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="internetQuizTitle">
+            <button class="modal-close" onclick="closeInternetQuiz()" aria-label="Close modal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <!-- Step 1 -->
+            <div class="quiz-step active" id="istep1">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 1 of 3</div>
+                </div>
+                <h3 class="quiz-question" id="internetQuizTitle">How many devices connect to your Wi-Fi at once?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectInternetAnswer(1, 'light')">
+                        <div class="quiz-option-content">
+                            <div>1-5 devices</div>
+                            <span class="quiz-option-desc">Phones, a laptop, and a smart TV.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(1, 'moderate')">
+                        <div class="quiz-option-content">
+                            <div>6-20 devices</div>
+                            <span class="quiz-option-desc">Multiple phones, computers, tablets, and smart home devices.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(1, 'heavy')">
+                        <div class="quiz-option-content">
+                            <div>20+ devices</div>
+                            <span class="quiz-option-desc">A fully connected smart home with heavy usage.</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="quiz-step" id="istep2">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 2 of 3</div>
+                </div>
+                <h3 class="quiz-question">What are your primary online activities?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectInternetAnswer(2, 'basic')">
+                        <div class="quiz-option-content">
+                            <div>Basic browsing & email</div>
+                            <span class="quiz-option-desc">Social media, news, and occasional video streaming.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(2, 'work')">
+                        <div class="quiz-option-content">
+                            <div>Streaming & Working from home</div>
+                            <span class="quiz-option-desc">Zoom calls, standard HD streaming, and regular downloading.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(2, 'heavy')">
+                        <div class="quiz-option-content">
+                            <div>4K Streaming & Gaming</div>
+                            <span class="quiz-option-desc">Competitive online gaming, heavy file transfers, and 4K video.</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn btn-prev" onclick="prevInternetStep(1)">Back</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="quiz-step" id="istep3">
+                <div class="quiz-header">
+                    <div class="quiz-progress">Step 3 of 3</div>
+                </div>
+                <h3 class="quiz-question">How important is whole-home coverage?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="selectInternetAnswer(3, 'standard')">
+                        <div class="quiz-option-content">
+                            <div>Standard</div>
+                            <span class="quiz-option-desc">I just need good signal in a few main rooms.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(3, 'better')">
+                        <div class="quiz-option-content">
+                            <div>Important</div>
+                            <span class="quiz-option-desc">I want strong signal upstairs and downstairs.</span>
+                        </div>
+                    </button>
+                    <button class="quiz-option" onclick="selectInternetAnswer(3, 'best')">
+                        <div class="quiz-option-content">
+                            <div>Crucial</div>
+                            <span class="quiz-option-desc">I need flawless whole-home Wi-Fi everywhere.</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn btn-prev" onclick="prevInternetStep(2)">Back</button>
+                </div>
+            </div>
+
+            <!-- Result Step -->
+            <div class="quiz-step" id="istepResult">
+                <div class="quiz-header">
+                    <div class="quiz-title">Your Perfect Match</div>
+                </div>
+                <div class="quiz-result-card">
+                    <p style="color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem;">We recommend</p>
+                    <div class="quiz-result-name" id="recommendedInternetPlanName">500 Mbps</div>
+                    <p style="color: var(--text-secondary);" id="recommendedInternetPlanReason">This plan perfectly balances your home internet needs.</p>
+                </div>
+                <div style="text-align: center;">
+                    <button class="cta-button cta-solid" onclick="closeInternetQuizAndFocus()" style="width: auto; padding: 1rem 3rem;">View Plan Details</button>
+                    <br>
+                    <button class="quiz-btn btn-prev" style="margin-top: 1rem;" onclick="resetInternetQuiz()">Take quiz again</button>
+                </div>
+            </div>
 
         </div>
     </div>
 
     <script>
+        function toggleService(service) {
+            const mobilePlans = document.getElementById('mobile-plans');
+            const internetPlans = document.getElementById('internet-plans');
+            const mainTitle = document.getElementById('main-title');
+            const mainSubtitle = document.getElementById('main-subtitle');
+            const quizTitle = document.querySelector('.quiz-cta-text'); // Update quiz CTA if we want
+
+            if (service === 'mobile') {
+                internetPlans.style.display = 'none';
+                mobilePlans.style.display = ''; // Fallback to class definitions
+                mainTitle.innerText = "Find the Right Phone Plan";
+                mainSubtitle.innerText = "Simple, transparent options designed to fit your unique lifestyle.";
+            } else {
+                mobilePlans.style.display = 'none';
+                internetPlans.style.display = 'block';
+                mainTitle.innerText = "Add Internet to Your Plan";
+                mainSubtitle.innerText = "Reliable, high-speed connection for every home with a seamless bundle.";
+            }
+        }
+
+        function toggleAutoPay() {
+            const isAutoPay = document.getElementById('autopay-toggle').checked;
+            const basePrices = document.querySelectorAll('.base-price');
+            const asLowPrices = document.querySelectorAll('.as-low-price');
+            
+            basePrices.forEach(el => {
+                el.innerHTML = isAutoPay ? el.getAttribute('data-autopay') + '<span>/mo</span>' : el.getAttribute('data-noautopay') + '<span>/mo</span>';
+            });
+            
+            asLowPrices.forEach(el => {
+                el.innerText = isAutoPay ? el.getAttribute('data-autopay') : el.getAttribute('data-noautopay');
+            });
+        }
+
+        // Initialize toggle prices if needed (they default to checked state in markup)
+
         // Toggle the flipped class on the specific card container
         function flipCard(cardId) {
             const card = document.getElementById(cardId);
@@ -1033,14 +1797,39 @@
         }
 
         const answers = { 1: null, 2: null, 3: null };
+        const internetAnswers = { 1: null, 2: null, 3: null };
 
         function openQuiz() {
-            document.getElementById('quizOverlay').classList.add('active');
-            resetQuiz();
+            if (document.getElementById('toggle-internet').checked) {
+                document.getElementById('internetQuizOverlay').classList.add('active');
+                resetInternetQuiz();
+            } else {
+                document.getElementById('quizOverlay').classList.add('active');
+                resetQuiz();
+            }
         }
 
         function closeQuiz() {
             document.getElementById('quizOverlay').classList.remove('active');
+        }
+
+        function closeInternetQuiz() {
+            document.getElementById('internetQuizOverlay').classList.remove('active');
+        }
+
+        function closeInternetQuizAndFocus() {
+            closeInternetQuiz();
+            const planText = document.getElementById('recommendedInternetPlanName').innerText;
+            const lookupText = planText.split(' ')[0]; // "300", "500", or "1"
+            const cards = document.querySelectorAll('.internet-card');
+            
+            cards.forEach(card => {
+                if (card.innerText.includes(lookupText)) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.transform = 'scale(1.05)';
+                    setTimeout(() => { card.style.transform = ''; }, 600);
+                }
+            });
         }
 
         function closeQuizAndFocus() {
@@ -1069,12 +1858,12 @@
         }
 
         function nextStep(stepIndex) {
-            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('#quizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
             document.getElementById('step' + stepIndex).classList.add('active');
         }
 
         function prevStep(stepIndex) {
-            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('#quizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
             document.getElementById('step' + stepIndex).classList.add('active');
         }
 
@@ -1114,8 +1903,68 @@
             document.getElementById('recommendedPlanName').innerText = plan + " Plan";
             document.getElementById('recommendedPlanReason').innerText = reason;
             
-            document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('#quizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
             document.getElementById('stepResult').classList.add('active');
+        }
+
+        // --- Internet Quiz Logic ---
+        function selectInternetAnswer(stepIndex, answer) {
+            internetAnswers[stepIndex] = answer;
+            if (stepIndex < 3) {
+                nextInternetStep(stepIndex + 1);
+            } else {
+                calculateInternetResult();
+            }
+        }
+
+        function nextInternetStep(stepIndex) {
+            document.querySelectorAll('#internetQuizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('istep' + stepIndex).classList.add('active');
+        }
+
+        function prevInternetStep(stepIndex) {
+            document.querySelectorAll('#internetQuizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('istep' + stepIndex).classList.add('active');
+        }
+
+        function resetInternetQuiz() {
+            internetAnswers[1] = null;
+            internetAnswers[2] = null;
+            internetAnswers[3] = null;
+            nextInternetStep(1);
+        }
+
+        function calculateInternetResult() {
+            let score = 0;
+            
+            // Devices
+            if (internetAnswers[1] === 'moderate') score += 1;
+            else if (internetAnswers[1] === 'heavy') score += 2;
+            
+            // Usage
+            if (internetAnswers[2] === 'work') score += 1;
+            else if (internetAnswers[2] === 'heavy') score += 2;
+            
+            // Coverage
+            if (internetAnswers[3] === 'better') score += 1;
+            else if (internetAnswers[3] === 'best') score += 2;
+
+            let plan = "300 Mbps";
+            let reason = "This plan handles everyday browsing, streaming, and a few devices with ease.";
+            
+            if (score >= 4) {
+                plan = "1 Gig";
+                reason = "Perfect for heavy 4K streaming, competitive gaming, and fully connected smart homes.";
+            } else if (score >= 1.5) {
+                plan = "500 Mbps";
+                reason = "A great balance of speed and reliability for working from home and multiple devices.";
+            }
+
+            document.getElementById('recommendedInternetPlanName').innerText = plan;
+            document.getElementById('recommendedInternetPlanReason').innerText = reason;
+            
+            document.querySelectorAll('#internetQuizOverlay .quiz-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('istepResult').classList.add('active');
         }
     </script>
 </body>
